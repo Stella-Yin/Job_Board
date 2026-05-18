@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stella's Job Command Center</title>
+  <title>Stella 的找工指挥中心</title>
 
   <style>
     :root {
@@ -472,77 +472,76 @@
 <body>
   <header class="shell">
     <section class="hero">
-      <div class="eyebrow">✨ Job Gold Digger Mode</div>
-      <h1>Your application wall, but make it addictive.</h1>
+      <div class="eyebrow">✨ 找工淘金模式</div>
+      <h1>我的求职墙：每天点进去一点点，机会就多一点点。</h1>
       <p class="subtitle">
-        Search, filter, prioritize, favorite, and track each career page. Built for fast daily checking across public sector,
-        university, healthcare, and company job boards.
+        集中管理所有目标机构官网：搜索、筛选、收藏、标记状态、优先查看高匹配岗位入口。适合每天快速检查政府、大学、医疗、市政和公司招聘页面。
       </p>
 
       <div class="hero-actions">
-        <button class="primary" id="randomPick">Pick one board for me</button>
-        <button class="secondary" id="showFavorites">Show favorites</button>
-        <button class="secondary" id="resetAll">Reset filters</button>
+        <button class="primary" id="randomPick">今天帮我选一个</button>
+        <button class="secondary" id="showFavorites">只看收藏</button>
+        <button class="secondary" id="resetAll">重置筛选</button>
       </div>
     </section>
   </header>
 
   <main class="shell">
-    <section class="stats" aria-label="Job board statistics">
+    <section class="stats" aria-label="找工看板统计">
       <div class="stat">
         <div class="stat-number" id="totalStat">0</div>
-        <div class="stat-label">Total boards</div>
+        <div class="stat-label">总入口</div>
       </div>
       <div class="stat">
         <div class="stat-number" id="provinceStat">0</div>
-        <div class="stat-label">Provinces</div>
+        <div class="stat-label">省份数</div>
       </div>
       <div class="stat">
         <div class="stat-number" id="favoriteStat">0</div>
-        <div class="stat-label">Favorites</div>
+        <div class="stat-label">已收藏</div>
       </div>
       <div class="stat">
         <div class="stat-number" id="appliedStat">0</div>
-        <div class="stat-label">Marked applied</div>
+        <div class="stat-label">已申请</div>
       </div>
     </section>
 
     <section class="panel">
       <div class="toolbar">
-        <input id="searchInput" type="text" placeholder="Search organization, province, URL, category..." />
+        <input id="searchInput" type="text" placeholder="搜索机构、省份、网址或分类……" />
         <select id="provinceFilter">
-          <option value="ALL">All provinces</option>
+          <option value="ALL">全部省份</option>
         </select>
         <select id="categoryFilter">
-          <option value="ALL">All categories</option>
+          <option value="ALL">全部分类</option>
         </select>
         <select id="sortBy">
-          <option value="priority">Sort by smart priority</option>
-          <option value="name">Sort by organization A-Z</option>
-          <option value="province">Sort by province</option>
-          <option value="favorite">Favorites first</option>
+          <option value="priority">按智能优先级排序</option>
+          <option value="name">按机构名称 A-Z</option>
+          <option value="province">按省份排序</option>
+          <option value="favorite">收藏优先</option>
         </select>
       </div>
 
       <div class="chips" id="quickChips">
-        <span class="chip active" data-keyword="">All</span>
-        <span class="chip" data-keyword="Toronto">Toronto</span>
-        <span class="chip" data-keyword="University">Universities</span>
-        <span class="chip" data-keyword="City">Cities</span>
-        <span class="chip" data-keyword="Health">Healthcare</span>
-        <span class="chip" data-keyword="Public">Public sector</span>
+        <span class="chip active" data-keyword="">全部</span>
+        <span class="chip" data-keyword="Toronto">多伦多</span>
+        <span class="chip" data-keyword="大学/学院">大学</span>
+        <span class="chip" data-keyword="City">城市/市政</span>
+        <span class="chip" data-keyword="Health">医疗</span>
+        <span class="chip" data-keyword="Public">公共部门</span>
       </div>
     </section>
 
     <div class="board-header">
       <div class="count" id="count"></div>
-      <div class="hint">Tip: ⭐ favorite key boards; change status without leaving the page.</div>
+      <div class="hint">提示：⭐ 收藏重点入口；不用离开页面也能记录申请状态。</div>
     </div>
 
     <section class="grid" id="board"></section>
   </main>
 
-  <div class="toast" id="toast">Saved</div>
+  <div class="toast" id="toast">已保存</div>
 
   <script>
     let companies = [];
@@ -554,11 +553,11 @@
     };
 
     const categoryRules = [
-      { label: "Municipal", keywords: ["city", "region", "town", "municipality", "county"] },
-      { label: "Provincial", keywords: ["public service", "ontario", "bc public", "government"] },
-      { label: "University", keywords: ["university", "college", "utoronto", "ubc", "sfu", "bcit"] },
-      { label: "Healthcare", keywords: ["health", "hospital", "care"] },
-      { label: "Transit", keywords: ["transit", "ttc", "metrolinx", "translink"] }
+      { label: "市政机构", keywords: ["city", "region", "town", "municipality", "county"] },
+      { label: "省级政府", keywords: ["public service", "ontario", "bc public", "government"] },
+      { label: "大学/学院", keywords: ["university", "college", "utoronto", "ubc", "sfu", "bcit"] },
+      { label: "医疗健康", keywords: ["health", "hospital", "care"] },
+      { label: "交通运输", keywords: ["transit", "ttc", "metrolinx", "translink"] }
     ];
 
     function getStorage(key) {
@@ -576,7 +575,7 @@
     function getCategory(company) {
       const text = `${company.name} ${company.url}`.toLowerCase();
       const match = categoryRules.find(rule => rule.keywords.some(keyword => text.includes(keyword)));
-      return match ? match.label : "General";
+      return match ? match.label : "其他机构";
     }
 
     function getPriority(company) {
@@ -589,9 +588,9 @@
       if (text.includes("university") || text.includes("college")) score += 2;
       if (text.includes("career") || text.includes("jobs")) score += 1;
 
-      if (score >= 8) return { label: "High match", score };
-      if (score >= 5) return { label: "Good target", score };
-      return { label: "Explore", score };
+      if (score >= 8) return { label: "高度匹配", score };
+      if (score >= 5) return { label: "值得关注", score };
+      return { label: "可探索", score };
     }
 
     function getId(company) {
@@ -609,7 +608,7 @@
 
         return {
           province: columns[0]?.trim() || "N/A",
-          name: columns[1]?.trim() || "Untitled organization",
+          name: columns[1]?.trim() || "未命名机构",
           url: columns.slice(2).join(",").trim()
         };
       }).filter(company => company.url);
@@ -654,7 +653,7 @@
       document.getElementById("totalStat").textContent = companies.length;
       document.getElementById("provinceStat").textContent = new Set(companies.map(item => item.province)).size;
       document.getElementById("favoriteStat").textContent = Object.values(favorites).filter(Boolean).length;
-      document.getElementById("appliedStat").textContent = Object.values(statuses).filter(status => status === "Applied").length;
+      document.getElementById("appliedStat").textContent = Object.values(statuses).filter(status => status === "已申请").length;
     }
 
     function getFilteredCompanies() {
@@ -692,19 +691,19 @@
       const statuses = getStorage(STORAGE_KEYS.status);
       const filtered = getFilteredCompanies();
 
-      count.textContent = `${filtered.length} organization${filtered.length === 1 ? "" : "s"} found`;
+      count.textContent = `${filtered.length} 个机构符合条件`;
 
       board.innerHTML = "";
 
       if (!filtered.length) {
-        board.innerHTML = `<div class="empty">No matching job boards yet. Try another keyword or reset filters.</div>`;
+        board.innerHTML = `<div class="empty">暂时没有匹配的招聘入口。可以换个关键词，或点击“重置筛选”。</div>`;
         return;
       }
 
       filtered.forEach(company => {
         const id = getId(company);
         const isFavorite = !!favorites[id];
-        const status = statuses[id] || "Not checked";
+        const status = statuses[id] || "未查看";
 
         const card = document.createElement("article");
         card.className = "card";
@@ -712,7 +711,7 @@
         card.innerHTML = `
           <div class="topline">
             <span class="province">📍 ${company.province}</span>
-            <button class="favorite ${isFavorite ? "on" : ""}" title="Favorite this board" data-action="favorite">★</button>
+            <button class="favorite ${isFavorite ? "on" : ""}" title="收藏这个入口" data-action="favorite">★</button>
           </div>
 
           <div class="name">${company.name}</div>
@@ -725,12 +724,12 @@
           <div class="url">${company.url}</div>
 
           <div class="card-footer">
-            <select class="status" data-action="status" aria-label="Application status">
-              ${["Not checked", "Check today", "Saved job", "Applied", "No fit"].map(option =>
+            <select class="status" data-action="status" aria-label="申请状态">
+              ${["未查看", "今天查看", "已保存岗位", "已申请", "暂不匹配"].map(option =>
                 `<option value="${option}" ${option === status ? "selected" : ""}>${option}</option>`
               ).join("")}
             </select>
-            <a class="open-label" href="${company.url}" target="_blank" rel="noopener noreferrer">Open ↗</a>
+            <a class="open-label" href="${company.url}" target="_blank" rel="noopener noreferrer">打开 ↗</a>
           </div>
         `;
 
@@ -744,7 +743,7 @@
           if (!current[id]) delete current[id];
 
           setStorage(STORAGE_KEYS.favorite, current);
-          showToast(current[id] ? "Added to favorites" : "Removed from favorites");
+          showToast(current[id] ? "已加入收藏" : "已取消收藏");
           updateStats();
           renderBoard();
         });
@@ -753,7 +752,7 @@
           const current = getStorage(STORAGE_KEYS.status);
           current[id] = event.target.value;
           setStorage(STORAGE_KEYS.status, current);
-          showToast(`Status saved: ${event.target.value}`);
+          showToast(`状态已保存：${event.target.value}`);
           updateStats();
         });
 
@@ -793,17 +792,17 @@
 
     document.getElementById("showFavorites").addEventListener("click", () => {
       favoritesOnly = !favoritesOnly;
-      document.getElementById("showFavorites").textContent = favoritesOnly ? "Show all boards" : "Show favorites";
+      document.getElementById("showFavorites").textContent = favoritesOnly ? "查看全部" : "只看收藏";
       renderBoard();
     });
 
     document.getElementById("randomPick").addEventListener("click", () => {
       const filtered = getFilteredCompanies();
-      if (!filtered.length) return showToast("No board to pick");
+      if (!filtered.length) return showToast("没有可选择的入口");
 
       const choice = filtered[Math.floor(Math.random() * filtered.length)];
       document.getElementById("searchInput").value = choice.name;
-      showToast(`Today's pick: ${choice.name}`);
+      showToast(`今天推荐：${choice.name}`);
       renderBoard();
     });
 
@@ -821,7 +820,7 @@
     loadCSV().catch(error => {
       document.getElementById("board").innerHTML = `
         <div class="empty">
-          Could not load companies.csv. Make sure index.html and companies.csv are in the same folder.
+          无法加载 companies.csv。请确认 index.html 和 companies.csv 在同一个文件夹里。
         </div>
       `;
       console.error(error);
